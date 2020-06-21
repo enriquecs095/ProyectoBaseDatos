@@ -22,6 +22,7 @@ router.post('/add', async (req,res)=> {
     await pool.query(sql, function (err, result) {
         if (err) throw err;
     console.log("1 record inserted");
+    req.flash('success','Solicitud Agregada');
     res.redirect('/links');
   });
 });
@@ -38,6 +39,7 @@ router.get('/negar/:ID_Solicitud', async(req,res)=>{
     await pool.query(sql, function (err, result) {
         if (err) throw err;
     console.log("1 record updated");
+    req.flash('success','Solicitud Negada');
     res.redirect('/links');
     });
 });
@@ -59,9 +61,19 @@ router.post('/aceptar/:ID_Solicitud', async (req,res)=> {
     console.log("1 record inserted");
     const link= await pool.query("UPDATE Solicitud_Proyecto SET Estado_Solicitud = '1' WHERE ID_Solicitud = '"+ID_Solicitud+"'");
     console.log("1 record updated");
+    req.flash('success','Solicitud Aceptada');
     res.redirect('/links');
   
 });
+
+router.get('/historial/:ID_Proyecto', async(req,res) => {
+    const {ID_Proyectos} = req.params;
+    const links = await pool.query('SELECT * FROM Proyectos WHERE ID_Proyectos=? ',[ID_Proyectos]);
+    const links1 = await pool.query('SELECT * FROM Equipo_Trabajo');
+    console.log(links);
+    res.render('links/historial', {links:links[0],links1});
+});
+
 
 
 
