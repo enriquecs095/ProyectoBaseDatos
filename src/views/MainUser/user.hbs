@@ -1,0 +1,37 @@
+
+<div class="container p-5">
+    <div class="row" >
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header" >
+                    <h3>Bienvenido</h3>
+                </div>
+                <div class="card-body" >
+                    <img src="/img/user.png" alt="user" class="card-img-top mx-auto m-2 rounded-circle w-50">
+                    <form action="/user" method="POST">
+                        <div class="form-group" style="text-align:left">
+                            <label for="ID_Usuario"> {{userlog}}</label>
+                        </div>
+                            <label for="ID_Rol"> {{rol}}</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+   </div>
+
+    <div class="container p-4">
+        <div class="card">
+        {{#each nPrivilegios}} 
+            <div class="col-md-3">
+                <div class="card-body">
+                    <button class="btn btn-success btn-block"> 
+                        {{Nombre_P}} 
+                    </button>
+            </div>
+        </div>
+        {{/each}}
+            </div>
+        </div>
+</div>

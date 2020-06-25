@@ -7,6 +7,7 @@ router.get('/add',(req,res)=>{
     res.render('links/add');
 });
 
+
 router.post('/add', async (req,res)=> {
     const {Title,Detalles_de_Proyecto,ID_Cliente}=req.body;
     console.log(req.body);
@@ -75,6 +76,16 @@ router.get('/historial/:ID_Proyecto', async(req,res) => {
 });
 
 
+router.get('/user', async (req,res)=>{
+    const {ID_Usuario,ID_Rol}=req.user;
+    console.log(ID_Usuario);
+    console.log(ID_Rol);
+    const nPrivilegios = await pool.query('SELECT * FROM Privilegios WHERE IDRol=? ',[ID_Rol]);
+    console.log(nPrivilegios);
+    const userlog=ID_Usuario;
+    const rol=ID_Rol
+    res.render('MainUser/user',{userlog,rol,nPrivilegios});
+});
 
 
 module.exports = router;
