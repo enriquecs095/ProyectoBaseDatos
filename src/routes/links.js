@@ -81,9 +81,11 @@ router.get('/user', async (req,res)=>{
     console.log(ID_Usuario);
     console.log(ID_Rol);
     const nPrivilegios = await pool.query('SELECT * FROM Privilegios WHERE IDRol=? ',[ID_Rol]);
-    console.log(nPrivilegios);
     const userlog=ID_Usuario;
-    const rol=ID_Rol
+    var rol;
+        if (ID_Rol==1) rol='Administrador';
+        else if (ID_Rol==2) rol='Auxiliar';
+        else rol='Cliente';
     res.render('MainUser/user',{userlog,rol,nPrivilegios});
 });
 
