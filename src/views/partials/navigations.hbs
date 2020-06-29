@@ -8,14 +8,11 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Proyectos
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/links">Proyectos</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/links/add">Agregar Solicitud Proyecto</a>
+            {{#if userlog}}  
+          <li class="nav-item"> 
+            <a  href="/logout"> Cerrar Sesion </a>
+          </li>
+            {{/if}}
           </div>
       </ul>
     </div>

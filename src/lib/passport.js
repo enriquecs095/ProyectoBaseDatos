@@ -21,7 +21,7 @@ passport.use(
         if (validPassword) {
          done(null, user); //, req.flash("success", "Bienvenido " + user.ID_Usuario)
         } else {
-        done(null, false, req.flash("message", "Contrasena Incorrecta"));
+        return done(null, false, req.flash("message", "Contrasena Incorrecta"));
         }
       } else {
         return done(null,false,req.flash("message", "Usuario No Encontrado"));
@@ -31,27 +31,36 @@ passport.use(
 );
 
 
+
 passport.use(
   "local.signup",
   new LocalStrategy(
     {
-      usernameField: 'username',
+      usernameField: 'ID_Usuario',
       passwordField: 'password',
       passReqToCallback: true,
     },
-    async (req, username, password, done) => {
-      const { Rol } = req.body;
+    async (req, ID_Usuario, password, done) => {
+      const { Rol, Cpassword } = req.body;
       const newUser = {
-        username,
+        ID_Usuario,
         password,
         Rol,
       };
-      console.log(newUser);
-      newUser.password = await helpers.encryptPassword(password);
-      console.log(newUser);
-      const result = await pool.query("INSERT INTO Usuarios(ID_Usuario,Contrasena,ID_Rol) VALUES ('" +newUser.username +"','" +newUser.password +"','" +newUser.Rol +"')");
-      return done(null, newUser);
+      var Privilegios=0;
+      const rows = await pool.query("SELECT * FROM Usuarios WHERE ID_Usuario = ?", [ID_Usuario]);
+      if(rows.length>0){
+          return done(null,false,req.flash("message", "Usuario ya existe"));
+        }else{ 
+          if(password==Cpassword){
+              newUser.password = await helpers.encryptPassword(password);
+              const result = await pool.query("INSERT INTO Usuarios(ID_Usuario,Contrasena,ID_Rol,Privilegios) VALUES ('" +newUser.ID_Usuario +"','" +newUser.password +"','" +newUser.Rol + "','" +Privilegios+ "')");
+              done(null, newUser);
+          }else{
+              return done(null,false,req.flash("message", "Constraseñas no coinciden"));
+      }
     }
+  }
   )
 );
 
@@ -59,6 +68,7 @@ passport.use(
 passport.serializeUser((user, done) => {
   done(null, user.ID_Usuario);
 });
+
 
 passport.deserializeUser(async (username, done) => {
   const rows = await pool.query("SELECT * FROM Usuarios WHERE ID_Usuario=? ", [

@@ -1,0 +1,39 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Habilidades Empleado {{ID_Usuario}}</h3>
+                </div>
+                <div class="card-body">
+                         <form action="/inserth" method="POST">
+                          <div class="form-group" style="text-align:center">
+                            <select id="Habilidades" name="Habilidades" aria-placeholder="Habilidades Em" required>
+                                {{#each lists}}
+                                    <option value="{{ID_Habilidad}}">{{Nombre_habilidad}}{{" - "}}{{Nombre_tecnologia}}</option>
+                                {{/each}}
+                            </select> 
+                            </div>
+                            <div class="form-group" style="text-align:center">
+                             <button class="btn btn-success btn-block">
+                                Agregar Habilidad
+                            </button>
+                        </div>  
+                    </form>
+                    </div> 
+                     <div class="card-body">
+                    <form action="/insertpe" method="POST">
+                        <div class="form-group" style="text-align:center">
+                            <input type="text" name="NombrePuesto" placeholder="Nombre del puesto" class="form-control" autofocus required>
+                        </div>
+                         <div class="form-group" style="text-align:center">
+                            <button class="btn btn-success btn-block">
+                                Registrar
+                            </button>
+                            </div>
+                        </form>
+                        </div> 
+                    </div>    
+                </div>
+            </div>
+        </div>

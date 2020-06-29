@@ -8,10 +8,13 @@
                 <div class="card-body">
                     <form action="/signup" method="POST">
                         <div class="form-group">
-                            <input type="text" name="username" placeholder="Username" class="form-control" autofocus>
+                            <input type="text" name="ID_Usuario" placeholder="Username" class="form-control" autofocus>
                         </div>
                         <div class="form-group">
                             <input type="password" name="password" placeholder="Contrasena" class="form-control">
+                        </div> 
+                        <div class="form-group">
+                            <input type="password" name="Cpassword" placeholder="Confirmar Contrasena" class="form-control">
                         </div> 
                         <select id="Rol" name="Rol" aria-placeholder="Roles" >
                                 {{#each links}}
@@ -20,7 +23,7 @@
                             </select> 
                         <div class="form-group p-4">
                             <button class="btn btn-success btn-block">
-                                Registro
+                                Continuar
                             </button>
                         </div>
                     </form>

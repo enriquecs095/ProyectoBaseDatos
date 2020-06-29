@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+
 const pool = require('../database');
+
 
 router.get('/add',(req,res)=>{
     res.render('links/add');
@@ -28,11 +30,12 @@ router.post('/add', async (req,res)=> {
   });
 });
 
-router.get('/', async (req,res)=> {
+router.get('/a', async (req,res)=> {
     const links = await pool.query('SELECT * FROM Proyectos');
     const links1 = await pool.query('SELECT * FROM Solicitud_Proyecto');
     res.render('links/list', {links1,links});
 });
+
 
 router.get('/negar/:ID_Solicitud', async(req,res)=>{
     const {ID_Solicitud}= req.params;
@@ -45,6 +48,7 @@ router.get('/negar/:ID_Solicitud', async(req,res)=>{
     });
 });
 
+//aqui acepto el proyecto
 router.get('/aceptar/:ID_Solicitud', async(req,res) => {
     const {ID_Solicitud} = req.params;
     console.log(ID_Solicitud);
@@ -55,6 +59,7 @@ router.get('/aceptar/:ID_Solicitud', async(req,res) => {
     res.render('links/aceptar', {links:links[0],links1});
 });
 
+//aqui niego el proyecto
 router.post('/aceptar/:ID_Solicitud', async (req,res)=> {
     const {Nombre,Tecnologias,presupuesto,url_trello,url_github,ET,Etiqueta,Entrega,Inicio,Encargado,ID_Solicitud,Nombre_Proyecto}=req.body;
     console.log(req.body);
@@ -64,9 +69,9 @@ router.post('/aceptar/:ID_Solicitud', async (req,res)=> {
     console.log("1 record updated");
     req.flash('success','Solicitud Aceptada');
     res.redirect('/links');
-  
 });
 
+//aqui veo el proyecto
 router.get('/historial/:ID_Proyecto', async(req,res) => {
     const {ID_Proyectos} = req.params;
     const links = await pool.query('SELECT * FROM Proyectos WHERE ID_Proyectos=? ',[ID_Proyectos]);
@@ -76,18 +81,5 @@ router.get('/historial/:ID_Proyecto', async(req,res) => {
 });
 
 
-router.get('/user', async (req,res)=>{
-    const {ID_Usuario,ID_Rol}=req.user;
-    console.log(ID_Usuario);
-    console.log(ID_Rol);
-    const nPrivilegios = await pool.query('SELECT * FROM Privilegios WHERE IDRol=? ',[ID_Rol]);
-    const userlog=ID_Usuario;
-    var rol;
-        if (ID_Rol==1) rol='Administrador';
-        else if (ID_Rol==2) rol='Auxiliar';
-        else rol='Cliente';
-    res.render('MainUser/user',{userlog,rol,nPrivilegios});
-});
-
-
+  
 module.exports = router;
