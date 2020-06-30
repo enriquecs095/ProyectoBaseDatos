@@ -1,5 +1,34 @@
 <div class="container p-4">
-    <div class="row">
+ 
+     <div class="row">
+        {{#each links1}}
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                    <h3 class="card-title text-uppercase">
+                        {{Nombre_Proyecto}}
+                    </h3>
+                    <h6><b>ID Solicitud:</b></h6>
+                    <p class="m-2">{{ID_Solicitud}}</p>
+                    <h6><b>Descripcion Proyecto: </b></h6>
+                    <p class="m-2" id="desc">{{Descripcion_Proyecto}}</p>
+                    <h6><b>ID Cliente que Solicito:</b></h6>
+                    <p class="m-2">{{ID_cliente_solicita}}</p>
+                    <h6><b>Estado de la Solicitud</b></h6>
+                    <p class="m-2">{{Estado_Solicitud}}</p>
+                    <h6><b>Fecha </b></h6>
+                    <p class="m-2">{{timeago Fecha_Solicitud}}</p>
+                <a href="/links/cancelar/{{ID_Solicitud}}" class="btn btn-danger">Cancelar Solicitud</a>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay solicitudes de proyectos</p>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+        <div class="row">
         {{#each links}}
         <div class="col-md-3">
             <div class="card text-center p-4">
@@ -32,41 +61,14 @@
                 <p class="m-2">{{timeago Fecha_Entrega}}</p>
                 <h6><b>ID Solicitud Proyecto: </b></h6>
                 <p class="m-2">{{Id_solicitud}}</p>
-                <a href="/links/historial/{{ID_Proyectos}}" class="btn btn-secondary">Agregar historial Trabajo</a>
             </div>
         </div>
         {{else}}
         <div class="col-md-4 mx-auto">
             <div class="card card-body text-center">
-                <p>No hay proyectos</p>
+                <p>No hay proyectos en proceso</p>
             </div>
         </div>
         {{/each}}
-        {{#each links1}}
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                    <h3 class="card-title text-uppercase">
-                        {{Nombre_Proyecto}}
-                    </h3>
-                    <h6><b>Descripcion Proyecto: </b></h6>
-                    <p class="m-2" id="desc">{{Descripcion_Proyecto}}</p>
-                    <h6><b>ID Cliente que Solicito:</b></h6>
-                    <p class="m-2">{{ID_cliente_solicita}}</p>
-                    <h6><b>Estado de la Solicitud</b></h6>
-                    <p class="m-2">{{Estado_Solicitud}}</p>
-                    <h6><b>Fecha </b></h6>
-                    <p class="m-2">{{timeago Fecha_Solicitud}}</p>
-                <a href="/links/negar/{{ID_Solicitud}}" class="btn btn-danger">Negar Solicitud</a>
-                <a href="/links/aceptar/{{ID_Solicitud}}" class="btn btn-secondary btn-block">Aceptar</a>
-            </div>
         </div>
-        {{else}}
-        <div class="col-md-4 mx-auto">
-            <div class="card card-body text-center">
-                <p>No hay solicitudes de proyectos</p>
-                <a href="/links/add">Solicitar Uno</a>
-            </div>
-        </div>
-        {{/each}}
-    </div>
 </div>

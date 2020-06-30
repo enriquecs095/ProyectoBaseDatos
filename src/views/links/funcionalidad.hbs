@@ -1,0 +1,35 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Funcionalidades</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/agregarf" method="POST">
+                    <div class="form-group">
+                        <select id="ID_Proy" name="ID_Proy" aria-placeholder="Proyecto" required >
+                                {{#each nProyectos}}
+                                    <option value="{{ID_Proyectos}}">{{ID_Proyectos}} - {{Nombre}}</option>
+                                {{/each}}
+                            </select> 
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="Caracteristica" placeholder="Caracteristicas" class="form-control p-2">
+                        </div> 
+                        <select id="Prioridad" name="Prioridad" aria-placeholder="Roles">
+                                    <option value="1">Alto</option>
+                                    <option value="2">Medio</option>
+                                    <option value="3">Bajo</option>
+                            </select>
+                        <div class="form-group p-4">
+                            <button class="btn btn-success btn-block">
+                                Continuar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

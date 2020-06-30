@@ -3,15 +3,16 @@
         <div class="col-md-4 mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <form action="/links/aceptar/{{links.ID_Solicitud}}" method="POST">
+                    <form action="/aceptarP" method="POST">
                         <div class="form-group">
-                            <input type="text" value="{{links.Nombre_Proyecto}}"class="form-control" name="Nombre_Proyecto" readonly>
+                         <select id="Solicitud" name="Solicitud" aria-placeholder="Solicitud" required >
+                                {{#each nSolicitudes}}
+                                    <option value="{{ID_Solicitud}}">{{ID_Solicitud}} - {{Nombre_Proyecto}} </option>
+                                {{/each}}
+                            </select> 
                         </div>
                         <div class="form-group">
-                            <input type="text" value="{{links.ID_Solicitud}}"class="form-control" name="ID_Solicitud"  readonly>
-                        </div>
-                        <div class="form-group">
-                            <textarea name="Tecnologias" rows="2" class="form-control" placeholder="Conjunto Tecnologias" autofocus></textarea>
+                            <textarea name="Tecnologias" rows="2" class="form-control" placeholder="Conjunto Tecnologias" autofocus,required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="presupuesto">Presupuesto: </label>
@@ -38,14 +39,18 @@
                         </div>
                         <div class="form-group">
                              <select id="ET" name="ET" aria-placeholder="Equipo Trabajo">
-                                {{#each links1}}
+                                {{#each nEquipoTrabajo}}
                                     <option value="{{ID_Equipo_Trabajo}}">{{Nombre_Equipo_Trabajo}}</option>
                                 {{/each}}
                             </select> 
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="Encargado" placeholder="ID Encargado" >
-                        </div>
+                          <div class="form-group">
+                     <select id="Encargado" name="Encargado" aria-placeholder="Equipo Trabajo">
+                                {{#each nPuestoEmpleado}}
+                                    <option value="{{Numero_Empleado}}">{{Numero_Empleado}}</option>
+                                {{/each}}
+                    </select> 
+                    </div>
                         <div class="form-group">
                             <label for="Entrega">Fecha Entrega:</label>
                                 <input type="date" id="Entrega" name="Entrega">
@@ -56,7 +61,7 @@
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success btn-block">
-                                Aceptar Proyecto
+                                Agregar Proyecto
                             </button>
                         </div>
                     </form>

@@ -5,12 +5,10 @@ const passport = require('passport');
 
 const pool = require('../database');
 
-
 router.get('/signup',async (req,res)=>{
     const links = await pool.query('SELECT * FROM Rol');
     res.render('auth/signup',{links:links});
 });
-
 
 router.get('/type',async(req,res)=>{ //escogo que voy a agregar usuario o cliente
   const {ID_Rol,ID_Usuario}=req.user;
@@ -59,22 +57,46 @@ router.post('/insertpe', async (req,res)=>{//extraigo los datos del formulario h
 });
 
 
-router.post('/inserth', async (req,res,next)=>{
+router.get('/Solicitudes%20Proyectos', async(req,res)=> {
+  const {ID_Usuario}=req.user;
+  const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
+  const cliente=nCliente[0]
+  const links1 = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  const links = await pool.query('SELECT * FROM Proyectos p inner join Solicitud_Proyecto sp on p.Id_solicitud=sp.ID_Solicitud  WHERE sp.ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  res.render('links/list', {links1,links});
+});
+
+
+router.post('/Solicitudes%20Proyectos', async (req,res)=> {//aqui veo las solicitudes y proyectos
+  const {ID_Usuario}=req.user;
+  const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
+  const cliente=nCliente[0]
+  const links1 = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  const links = await pool.query('SELECT * FROM Proyectos p inner join Solicitud_Proyecto sp on p.Id_solicitud=sp.ID_Solicitud  WHERE sp.ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  res.render('links/list', {links1,links});
+});
+
+
+router.post('/nh', async (req,res,next)=>{//nuevamente voy a habilidades
+  const lists = await pool.query('SELECT * FROM Habilidades_conocimiento');
+  res.render('auth/skills',{lists});
+});
+
+
+router.post('/inserth', async (req,res,next)=>{ //aqui agrego las habilidades
   const {ID_Usuario}=req.user;
   const {Habilidades}=req.body;
   const nEmpleado =await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
   const empleado=nEmpleado[0] 
   var seingreso = await pool.query("INSERT INTO Empleados_x_habilidades(ID_empleado,ID_habilidad) VALUES ('"+empleado.Numero_Empleado+"','"+Habilidades+"')");
-  const lists = await pool.query('SELECT * FROM Habilidades_conocimiento');
   if(seingreso){ 
     req.flash("success", "Se agrego");
-    res.render('auth/skills',{lists});
+    res.redirect('/nh');
   }else{
-    req.flash("mesage", "No se agrego");
-    res.render('auth/skills',{lists});
+    req.flash("message", "No se agrego");
+    res.redirect('/nh');
   }
 });
-
 
 
 router.post('/inserte', async (req,res)=>{//extraigo los datos del formulario cliente
@@ -109,10 +131,64 @@ router.post('/Ver%20Usuarios',(req,res)=>{
      res.render('Ver-Usuarios');
 });
 
+router.post('/Agregar%20Funcionalidad',async (req,res)=>{
+  const {ID_Usuario}=req.user;
+  const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
+  const cliente=nCliente[0]
+  console.log(cliente.Codigo_Clientes);
+  const nProyectos = await pool.query('SELECT * FROM Proyectos p inner join Solicitud_Proyecto sp on p.Id_solicitud=sp.ID_Solicitud  WHERE sp.ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  res.render('links/funcionalidad',{nProyectos});
+});
+
+//para redireccionamiento se utiliza get
+router.get('/Agregar%20Funcionalidad',async (req,res)=>{
+  const {ID_Usuario}=req.user;
+  const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
+  const cliente=nCliente[0]
+  console.log(cliente.Codigo_Clientes);
+  const nProyectos = await pool.query('SELECT * FROM Proyectos p inner join Solicitud_Proyecto sp on p.Id_solicitud=sp.ID_Solicitud  WHERE sp.ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  res.render('links/funcionalidad',{nProyectos});
+});
+
+
+
+router.post('/Solicitar%20Proyecto',(req,res)=>{
+  res.render('links/historial');
+});
+
+
+router.get('/Solicitar%20Proyecto',(req,res)=>{
+  res.render('links/historial');
+});
+
+//renderizo la pagina agregar actividad
+router.get('/Agregar%20Actividad',async(req,res)=>{
+  const nActividades = await pool.query('SELECT * FROM Actividades');
+  res.render('links/detalles',{nActividades});
+});
+
+router.post('/Agregar%20Actividad',async(req,res)=>{
+  const nActividades = await pool.query('SELECT * FROM Actividades');
+  res.render('links/detalles',{nActividades});
+});
+//--------------------------------------
+
+router.get('/Gestionar%20Solicitudes',async(req,res)=>{
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto');
+  res.render('links/adminlist',{nSolicitudes});
+});
+
+
+router.post('/Gestionar%20Solicitudes',async(req,res)=>{
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto');
+  res.render('links/adminlist',{nSolicitudes});
+});
+
 
 router.get('/Brindar%20Acceso',(req,res)=>{
   res.render('links/adding');
 });
+
 
 router.get('/logout',(req,res)=>{
   req.logOut();
@@ -127,7 +203,7 @@ router.post('/listuser', async(req,res)=> {
     await pool.query("UPDATE Usuarios SET Privilegios = '1' WHERE ID_Usuario = '"+user+"'");
      req.flash('success','Hecho');
      res.redirect('/Brindar Acceso');
-  } else {
+     }else {
     req.flash("message", "Usuario No Encontrado");
     res.redirect('/Brindar Acceso');
   }
@@ -164,6 +240,79 @@ router.get('/user', async (req,res)=>{
       res.render('mainuser/profile',{userlog,rol});
   }
 });
+
+
+//Aqui envio parametros a agregar proyecto y renderizo
+router.get('/Agregar%20Proyecto',async(req,res)=>{
+  var puesto="Jefe de Proyecto";
+  var eSolicitud=1;
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[eSolicitud]);
+  const nEquipoTrabajo = await pool.query('SELECT * FROM Equipo_Trabajo');
+  const nPuestoEmpleado= await pool.query('SELECT * FROM Puesto_Empleado WHERE Nombre_Puesto=? ',[puesto]);
+  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nPuestoEmpleado});
+});
+
+
+router.post('/Agregar%20Proyecto',async(req,res)=>{
+  var puesto="Jefe de Proyecto";
+  var eSolicitud=1;
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[eSolicitud]);
+  const nEquipoTrabajo = await pool.query('SELECT * FROM Equipo_Trabajo');
+  const nPuestoEmpleado= await pool.query('SELECT * FROM Puesto_Empleado WHERE Nombre_Puesto=? ',[puesto]);
+  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nPuestoEmpleado});
+});
+
+
+//Para llamar la cantidad de veces la funcion al agregar proyecto
+router.get('/Agregar%20Proyecto',async(req,res)=>{
+  var puesto="Jefe de Proyecto";
+  var eSolicitud=1;
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[eSolicitud]);
+  const nEquipoTrabajo = await pool.query('SELECT * FROM Equipo_Trabajo');
+  const nPuestoEmpleado= await pool.query('SELECT * FROM Puesto_Empleado WHERE Nombre_Puesto=? ',[puesto]);
+  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nPuestoEmpleado});
+});
+
+
+//aqui agrego el proyecto
+router.post('/aceptarP', async (req,res)=>{
+  const {Nombre,Tecnologias,presupuesto,url_trello,url_github,ET,Etiqueta,Entrega,Inicio,Encargado,Solicitud}=req.body;
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE ID_Solicitud=? ',[Solicitud]);
+  const solicitud=nSolicitudes[0];
+  var seAgrego = await pool.query("INSERT INTO Proyectos (Nombre, Conjunto_Tecnologia,Presupuesto,Esta_Asignado,Pseudo_Nombre,URL_Proy_Github,URL_Proy_Trello,ID_Etiqueta,ID_Equipo_Trabajo,ID_Jefe_Encargado,Fecha_Inicio,Fecha_Entrega,Id_solicitud) VALUES ('"+solicitud.Nombre_Proyecto+"','"+Tecnologias+"','"+presupuesto+"','1','"+Nombre+"','"+url_github+"','"+url_trello+"','"+Etiqueta+"','"+ET+"','"+Encargado+"','"+Inicio+"','"+Entrega+"','"+Solicitud+"')");
+  if(seAgrego){
+    req.flash('success','Se agrego el proyecto');
+      res.redirect('/Agregar%20Proyecto');
+  }
+});
+
+//aqui agrego la funcionalidad
+router.post('/agregarF', async (req,res)=>{
+  const {ID_Proy,Caracteristica,Prioridad}=req.body;
+  const {ID_Usuario}=req.user;
+  const nCliente =await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
+  const cliente=nCliente[0] 
+  var seAgrego = await pool.query("INSERT INTO Funcionalidad (Orden_Prioridad,Caracteristica,id_proyecto,id_cliente) VALUES ('"+Prioridad+"','"+Caracteristica+"','"+ID_Proy+"','"+cliente.Codigo_Clientes+"')");
+  if(seAgrego){
+    req.flash('success','Se agrego la funcionalidad');
+      res.redirect('/Agregar%20Funcionalidad');
+  }
+});
+
+
+//aqui agrego la actividad
+router.post('/agregarA', async (req,res)=>{
+  const {Actividad,Actividades,Estado,Horas}=req.body;
+  const {ID_Usuario}=req.user;
+  const nEmpleado =await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0] 
+  var seAgrego = await pool.query("INSERT INTO Detalle_Actividades (ID_Actividad,Actividades_Realizadas,Estado_Actividad,Tiempo_Trabajado,ID_nempleado) VALUES ('"+Actividad+"','"+Actividades+"','"+Estado+"','"+Horas+"','"+empleado.Numero_Empleado+"')");
+  if(seAgrego){
+    req.flash('success','Se agrego la actividad');
+      res.redirect('/Agregar%20Actividad');
+  }
+});
+
 
 
 module.exports = router;
