@@ -7,21 +7,27 @@
                 </div>
                 <div class="card-body">
                     <form action="/agregarA" method="POST">
+                    <div class="form-group">
+                    <h6>Seleccione actividad:</h6>
                         <select id="Actividad" name="Actividad" >
                                 {{#each nActividades}}
                                     <option value="{{ID_Actividad}}">{{ID_Actividad}} - {{Tipo_actividad}} - {{ID_Funcionalidad}}</option>
                                 {{/each}}
                             </select> 
+                         </div> 
                         <div class="form-group">
                             <input type="text" name="Actividades" rows="3" placeholder="Actvidades Realizadas" class="form-control p-2">
                         </div> 
                         <div class="form-group">
                             <input type="text" name="Horas" rows="1" placeholder="Horas Trabajadas" class="form-control p-2">
                         </div> 
+                         <div class="form-group">
+                              <h6>Seleccione Estado:</h6>
                         <select id="Estado" name="Estado" class="block" aria-placeholder="estado">
                                     <option value="0">No Terminado</option>
                                     <option value="1">Terminado</option>
                             </select>
+                        </div> 
                         <div class="form-group p-4">
                             <button class="btn btn-success btn-block">
                                 Agregar

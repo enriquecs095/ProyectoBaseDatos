@@ -1,0 +1,31 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3>Solicitar Actividad</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/solicitarA" method="POST">
+                     <div class="form-group">
+                        <h6>Seleccione Funcionalidad:</h6>
+                        <select id="ID_Funcionalidad" name="ID_Funcionalidad" >
+                                {{#each nFuncionalidades}}
+                                    <option value="{{ID_Funcionalidad}}">{{ID_Funcionalidad}} - {{Caracteristica}}</option>
+                                {{/each}}
+                            </select> 
+                    </div>
+                        <div class="form-group">
+                            <input type="text" name="Actividad" placeholder="Tipo Actividad" class="form-control p-2">
+                        </div> 
+                        <div class="form-group p-4">
+                            <button class="btn btn-success btn-block">
+                                Enviar Solicitud
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

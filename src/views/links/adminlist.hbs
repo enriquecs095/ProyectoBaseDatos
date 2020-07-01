@@ -1,11 +1,18 @@
 <div class="container p-4">
+        <div class="form-group p-3" style="text-align:center">
+            <h2 class="card-title">
+                Solicitudes de Proyecto
+            </h2>
+         </div>
      <div class="row">
         {{#each nSolicitudes}}
         <div class="col-md-3">
             <div class="card text-center p-4">
+                   <div class="form-group">
                     <h3 class="card-title text-uppercase">
                         {{Nombre_Proyecto}}
                     </h3>
+                     </div>
                     <h6><b>Descripcion Proyecto: </b></h6>
                     <p class="m-2" id="desc">{{Descripcion_Proyecto}}</p>
                     <h6><b>ID Cliente que Solicito:</b></h6>
@@ -14,14 +21,53 @@
                     <p class="m-2">{{Estado_Solicitud}}</p>
                     <h6><b>Fecha </b></h6>
                     <p class="m-2">{{timeago Fecha_Solicitud}}</p>
-                <a href="/links/negar/{{ID_Solicitud}}" class="btn btn-danger">Negar Solicitud</a>
-                <a href="/links/aprobar/{{ID_Solicitud}}" class="btn btn-secondary btn-block">Aceptar Solicitud</a>
+                <div class="form-group">
+                     <a href="/links/aprobar/{{ID_Solicitud}}" class="btn btn-secondary btn-block">Aceptar Solicitud</a>
+                </div>
+                 <div class="form-group">
+                    <a href="/links/negar/{{ID_Solicitud}}" class="btn btn-danger btn-block">Negar Solicitud</a>  
+                 </div>          
             </div>
         </div>
         {{else}}
         <div class="col-md-4 mx-auto">
             <div class="card card-body text-center">
                 <p>No hay solicitudes de proyectos</p>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+         <div class="form-group p-3" style="text-align:center">
+            <h2 class="card-title">
+                Solicitudes de Actividades
+            </h2>
+         </div>
+         <div class="row">
+        {{#each nSolicitudesA}}
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                    <div class="form-group">
+                    <h3 class="card-title text-uppercase">
+                        {{Tipo_Actividad}}
+                    </h3>
+                    </div>
+                    <h6><b>ID Solicitud: </b></h6>
+                    <p class="m-2" id="desc">{{ID_Solicitud}}</p>
+                    <h6><b>ID Funcionalidad: </b></h6>
+                    <p class="m-2" id="desc">{{ID_Funcionalidad}}</p>
+                    <p class="m-2">{{timeago Fecha_Solicitud}}</p>
+                <div class="form-group">
+                    <a href="/links/aprobarSA/{{ID_Solicitud}}" class="btn btn-secondary btn-block">Aceptar Solicitud</a> 
+                </div>
+                 <div class="form-group">
+                    <a href="/links/negarSA/{{ID_Solicitud}}" class="btn btn-danger btn-block">Negar Solicitud</a>
+                 </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay solicitudes de actividades</p>
             </div>
         </div>
         {{/each}}

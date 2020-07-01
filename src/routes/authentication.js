@@ -57,7 +57,7 @@ router.post('/insertpe', async (req,res)=>{//extraigo los datos del formulario h
 });
 
 
-router.get('/Solicitudes%20Proyectos', async(req,res)=> {
+router.get('/Solicitudes%20Realizadas', async(req,res)=> {
   const {ID_Usuario}=req.user;
   const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
   const cliente=nCliente[0]
@@ -67,7 +67,7 @@ router.get('/Solicitudes%20Proyectos', async(req,res)=> {
 });
 
 
-router.post('/Solicitudes%20Proyectos', async (req,res)=> {//aqui veo las solicitudes y proyectos
+router.post('/Solicitudes%20Realizadas', async (req,res)=> {//aqui veo las solicitudes y proyectos
   const {ID_Usuario}=req.user;
   const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
   const cliente=nCliente[0]
@@ -167,22 +167,43 @@ router.get('/Agregar%20Actividad',async(req,res)=>{
   res.render('links/detalles',{nActividades});
 });
 
+
 router.post('/Agregar%20Actividad',async(req,res)=>{
   const nActividades = await pool.query('SELECT * FROM Actividades');
   res.render('links/detalles',{nActividades});
 });
 //--------------------------------------
 
+
+//renderizo la pagina solicitar actividad
+router.get('/Solicitar%20Actividad',async(req,res)=>{
+  const nFuncionalidades = await pool.query('SELECT * FROM Funcionalidad');
+  res.render('links/solicitar',{nFuncionalidades});
+});
+
+
+router.post('/Solicitar%20Actividad',async(req,res)=>{
+  const nFuncionalidades = await pool.query('SELECT * FROM Funcionalidad');
+  res.render('links/solicitar',{nFuncionalidades});
+});
+//--------------------------------------
+
+//renderizo la pagina ver solicitudes
 router.get('/Gestionar%20Solicitudes',async(req,res)=>{
-  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto');
-  res.render('links/adminlist',{nSolicitudes});
+  var solicitud=0;
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[solicitud]);
+  const nSolicitudesA = await pool.query('SELECT * FROM Solicitud_Actividad WHERE Aprobado=? ',[solicitud]);
+  res.render('links/adminlist',{nSolicitudes,nSolicitudesA});
 });
 
 
 router.post('/Gestionar%20Solicitudes',async(req,res)=>{
-  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto');
-  res.render('links/adminlist',{nSolicitudes});
+  var solicitud=0;
+  const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[solicitud]);
+  const nSolicitudesA = await pool.query('SELECT * FROM Solicitud_Actividad WHERE Aprobado=? ',[solicitud]);
+  res.render('links/adminlist',{nSolicitudes,nSolicitudesA});
 });
+//--------------------------------------
 
 
 router.get('/Brindar%20Acceso',(req,res)=>{
@@ -232,7 +253,7 @@ router.get('/user', async (req,res)=>{
   var rol;
   const nPrivilegios = await pool.query('SELECT * FROM Privilegios WHERE IDRol=? ',[ID_Rol]);
       if (ID_Rol==1) rol='Administrador';
-          else if (ID_Rol==2) rol='Auxiliar';
+          else if (ID_Rol==2) rol='Empleado';
           else rol='Cliente';
   if (Privilegios ==1){
       res.render('mainuser/profile',{userlog,rol,nPrivilegios});
@@ -249,7 +270,9 @@ router.get('/Agregar%20Proyecto',async(req,res)=>{
   const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[eSolicitud]);
   const nEquipoTrabajo = await pool.query('SELECT * FROM Equipo_Trabajo');
   const nPuestoEmpleado= await pool.query('SELECT * FROM Puesto_Empleado WHERE Nombre_Puesto=? ',[puesto]);
-  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nPuestoEmpleado});
+  const puestoE=nPuestoEmpleado[0];
+  const nEmpleado = await pool.query('SELECT * FROM Empleados WHERE Numero_Empleado=? ',[puestoE.Numero_Empleado]);
+  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nEmpleado});
 });
 
 
@@ -259,7 +282,9 @@ router.post('/Agregar%20Proyecto',async(req,res)=>{
   const nSolicitudes = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud=? ',[eSolicitud]);
   const nEquipoTrabajo = await pool.query('SELECT * FROM Equipo_Trabajo');
   const nPuestoEmpleado= await pool.query('SELECT * FROM Puesto_Empleado WHERE Nombre_Puesto=? ',[puesto]);
-  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nPuestoEmpleado});
+  const puestoE=nPuestoEmpleado[0];
+  const nEmpleado = await pool.query('SELECT * FROM Empleados WHERE Numero_Empleado=? ',[puestoE.Numero_Empleado]);
+  res.render('links/aceptar',{nSolicitudes,nEquipoTrabajo,nEmpleado});
 });
 
 
@@ -286,6 +311,7 @@ router.post('/aceptarP', async (req,res)=>{
   }
 });
 
+
 //aqui agrego la funcionalidad
 router.post('/agregarF', async (req,res)=>{
   const {ID_Proy,Caracteristica,Prioridad}=req.body;
@@ -310,6 +336,25 @@ router.post('/agregarA', async (req,res)=>{
   if(seAgrego){
     req.flash('success','Se agrego la actividad');
       res.redirect('/Agregar%20Actividad');
+  }
+});
+
+//aqui agrego la solicitud de actividad
+router.post('/solicitarA', async (req,res)=>{
+  const {Actividad, ID_Funcionalidad}=req.body;
+  var Aprobado=0;
+  var date;
+  date = new Date();
+  date = date.getUTCFullYear() + '-' +
+  ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+  ('00' + date.getUTCDate()).slice(-2) + ' ' + 
+  ('00' + date.getUTCHours()).slice(-2) + ':' + 
+  ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
+  ('00' + date.getUTCSeconds()).slice(-2);
+  var seAgrego = await pool.query("INSERT INTO Solicitud_Actividad (Tipo_Actividad,ID_Funcionalidad,Fecha_Solicitud,Aprobado) VALUES ('"+Actividad+"','"+ID_Funcionalidad+"','"+date+"','"+Aprobado+"')");
+  if(seAgrego){
+    req.flash('success','Se envio la solicitud');
+      res.redirect('/Solicitar%20Actividad');
   }
 });
 

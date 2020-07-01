@@ -27,7 +27,7 @@ router.post('/add', async (req,res)=> {
 });
 
 
-//aqui niego la solicitud
+//aqui niego la solicitud de proyecto
 router.get('/negar/:ID_Solicitud', async(req,res)=>{
     const {ID_Solicitud}= req.params;
     var sql = "UPDATE Solicitud_Proyecto SET Estado_Solicitud = '2' WHERE ID_Solicitud = '"+ID_Solicitud+"'";
@@ -39,7 +39,7 @@ router.get('/negar/:ID_Solicitud', async(req,res)=>{
 });
 
 
-//aqui apruebo la solicitud
+//aqui apruebo la solicitud de proyecto
 router.get('/aprobar/:ID_Solicitud', async(req,res)=>{
     const {ID_Solicitud}= req.params;
     var sql = "UPDATE Solicitud_Proyecto SET Estado_Solicitud = '1' WHERE ID_Solicitud = '"+ID_Solicitud+"'";
@@ -51,28 +51,44 @@ router.get('/aprobar/:ID_Solicitud', async(req,res)=>{
 });
 
 
-//aqui borro la solicitud
+//aqui borro la solicitud de proyecto
+//   <a href="/links/cancelar/{{ID_Solicitud}}" class="btn btn-danger">Cancelar Solicitud</a>
 router.get('/cancelar/:ID_Solicitud', async(req,res)=>{//borro la solicitud proyecto
     const {ID_Solicitud}= req.params;
     var sql = "DELETE from Solicitud_Proyecto WHERE ID_Solicitud = '"+ID_Solicitud+"'";
     await pool.query(sql, function (err, result) {
         if (err) throw err;
     req.flash('success','Solicitud eliminada');
-    res.redirect('/Solicitudes%20Proyectos');
+    res.redirect('/Solicitudes%20Realizadas');
     });
 });
 
 
-/*
-//aqui veo el proyecto y el equipo de trabajo
-router.get('/historial/:ID_Proyecto', async(req,res) => {
-    const {ID_Proyectos} = req.params;
-    const links = await pool.query('SELECT * FROM Proyectos WHERE ID_Proyectos=? ',[ID_Proyectos]);
-    const links1 = await pool.query('SELECT * FROM Equipo_Trabajo');
-    console.log(links);
-    res.render('links/historial', {links:links[0],links1});
-});*/
-
-
+//aqui niego la solicitud de actividad
+router.get('/negarSA/:ID_Solicitud', async(req,res)=>{
+    const {ID_Solicitud}= req.params;
+    var sql = "UPDATE Solicitud_Actividad SET Aprobado = '2' WHERE ID_Solicitud = '"+ID_Solicitud+"'";
+   await pool.query(sql, function (err, result) {
+        if (err) throw err;
+    req.flash('success','Solicitud Negada');
+    res.redirect('/Gestionar%20Solicitudes');
+    });
+  });
   
+  
+  //aqui apruebo la solicitud de actividad
+  router.get('/aprobarSA/:ID_Solicitud', async(req,res)=>{
+    const {ID_Solicitud}= req.params;
+    const nSolicitudes =await pool.query('SELECT * FROM Solicitud_Actividad WHERE ID_Solicitud=? ',[ID_Solicitud]);
+    solicitud=nSolicitudes[0];
+     var seAgrego = await pool.query("INSERT INTO Actividades(Tipo_actividad,ID_Funcionalidad) VALUES ('"+solicitud.Tipo_Actividad+"','"+solicitud.ID_Funcionalidad+"')");
+     var sql = "UPDATE Solicitud_Actividad SET Aprobado = '1' WHERE ID_Solicitud = '"+solicitud.ID_Solicitud+"'";
+     await pool.query(sql, function (err, result) {
+        if (err) throw err; 
+       req.flash('success','Solicitud Aprobada');
+       res.redirect('/Gestionar%20Solicitudes');
+    });
+  });
+
+
 module.exports = router;

@@ -1,5 +1,9 @@
 <div class="container p-4">
- 
+        <div class="form-group p-3" style="text-align:center">
+            <h2 class="card-title">
+                Solicitudes de Proyecto
+            </h2>
+         </div>
      <div class="row">
         {{#each links1}}
         <div class="col-md-3">
@@ -17,7 +21,6 @@
                     <p class="m-2">{{Estado_Solicitud}}</p>
                     <h6><b>Fecha </b></h6>
                     <p class="m-2">{{timeago Fecha_Solicitud}}</p>
-                <a href="/links/cancelar/{{ID_Solicitud}}" class="btn btn-danger">Cancelar Solicitud</a>
             </div>
         </div>
         {{else}}
@@ -28,6 +31,11 @@
         </div>
         {{/each}}
         </div>
+        <div class="form-group p-3" style="text-align:center">
+            <h2 class="card-title">
+                Proyectos en desarrollo
+            </h2>
+         </div>
         <div class="row">
         {{#each links}}
         <div class="col-md-3">

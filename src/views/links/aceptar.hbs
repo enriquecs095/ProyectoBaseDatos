@@ -5,11 +5,15 @@
                 <div class="card-body">
                     <form action="/aceptarP" method="POST">
                         <div class="form-group">
+                            <div class="form-group">
+                            <h6>Seleccione solicitud: </h6>
                          <select id="Solicitud" name="Solicitud" aria-placeholder="Solicitud" required >
                                 {{#each nSolicitudes}}
                                     <option value="{{ID_Solicitud}}">{{ID_Solicitud}} - {{Nombre_Proyecto}} </option>
                                 {{/each}}
                             </select> 
+                            </div>
+                        </div>
                         </div>
                         <div class="form-group">
                             <textarea name="Tecnologias" rows="2" class="form-control" placeholder="Conjunto Tecnologias" autofocus,required></textarea>
@@ -28,6 +32,7 @@
                             <input type="url" name="url_trello" class="form-control" placeholder="URL Trello">
                         </div>
                         <div class="form-group">
+                            <h6>Seleccione etiqueta: </h6>
                              <select id="Etiqueta" name="Etiqueta">
                                 <option value="1">Not Started</option>
                                 <option value="2">On Track</option>
@@ -38,6 +43,7 @@
                             </select> 
                         </div>
                         <div class="form-group">
+                            <h6>Seleccione Equipo de Trabajo: </h6>
                              <select id="ET" name="ET" aria-placeholder="Equipo Trabajo">
                                 {{#each nEquipoTrabajo}}
                                     <option value="{{ID_Equipo_Trabajo}}">{{Nombre_Equipo_Trabajo}}</option>
@@ -45,9 +51,10 @@
                             </select> 
                         </div>
                           <div class="form-group">
-                     <select id="Encargado" name="Encargado" aria-placeholder="Equipo Trabajo">
-                                {{#each nPuestoEmpleado}}
-                                    <option value="{{Numero_Empleado}}">{{Numero_Empleado}}</option>
+                              <h6>Seleccione encargado: </h6>
+                                 <select id="Encargado" name="Encargado" aria-placeholder="Equipo Trabajo">
+                                {{#each nEmpleado}}
+                                    <option value="{{Numero_Empleado}}">{{Numero_Empleado}} - {{Nombre}}</option>
                                 {{/each}}
                     </select> 
                     </div>
