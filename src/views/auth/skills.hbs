@@ -10,9 +10,9 @@
                           <div class="form-group" style="text-align:center">
                          <div class="form-group">
                             <h6>Habilidades del empleado</h6>
-                             <select id="Habilidades" name="Habilidades" aria-placeholder="Habilidades Em" required>
+                             <select id="Habilidades" name="Habilidades" aria-placeholder="Habilidades" required>
                                 {{#each lists}}
-                                    <option value="{{ID_Habilidad}}">{{Nombre_habilidad}} - {{Nombre_tecnologia}}</option>
+                                    <option value="{{ID_Habilidad}}">{{Nombre_habilidad}} - {{Nombre_tecnologia}} </option>
                                 {{/each}}
                             </select> 
                             </div>  
@@ -26,8 +26,18 @@
                     </div> 
                      <div class="card-body">
                     <form action="/insertpe" method="POST">
-                        <div class="form-group" style="text-align:center">
-                            <input type="text" name="NombrePuesto" placeholder="Nombre del puesto" class="form-control" autofocus required>
+                            <div class="form-group">
+                            <h6>Seleccione Puesto: </h6>
+                             <select id="NombrePuesto" name="NombrePuesto" class="block" aria-placeholder="Puesto">
+                                    <option value="Jefe de Proyecto">Jefe de Proyecto</option>
+                                    <option value="Gerente">Gerente</option>
+                                    <option value="Lider de Equipo">Lider de Equipo</option>
+                                    <option value="Desarrollador">Desarrollador</option>
+                                    <option value="Diseñador Gráfico">Diseñador Gráfico</option>
+                                     <option value="Líder de Calidad">Líder de Calidad</option>
+                                     <option value="Líder de Documentación">Líder de Documentación</option>
+                                    <option value="Documentador Técnico">Documentador Técnico</option>
+                            </select>
                         </div>
                          <div class="form-group" style="text-align:center">
                             <button class="btn btn-success btn-block">

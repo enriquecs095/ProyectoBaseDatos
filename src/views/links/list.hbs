@@ -4,8 +4,13 @@
                 Solicitudes de Proyecto
             </h2>
          </div>
+            <div class="form-group p-3" style="text-align:center">
+            <h4 class="card-title">
+                En Espera
+            </h4>
+         </div>
      <div class="row">
-        {{#each links1}}
+        {{#each nSolicitudesP}}
         <div class="col-md-3">
             <div class="card text-center p-4">
                     <h3 class="card-title text-uppercase">
@@ -18,7 +23,7 @@
                     <h6><b>ID Cliente que Solicito:</b></h6>
                     <p class="m-2">{{ID_cliente_solicita}}</p>
                     <h6><b>Estado de la Solicitud</b></h6>
-                    <p class="m-2">{{Estado_Solicitud}}</p>
+                    <p class="m-2">Pendiente</p>
                     <h6><b>Fecha </b></h6>
                     <p class="m-2">{{timeago Fecha_Solicitud}}</p>
             </div>
@@ -26,11 +31,84 @@
         {{else}}
         <div class="col-md-4 mx-auto">
             <div class="card card-body text-center">
-                <p>No hay solicitudes de proyectos</p>
+                <p>No hay solicitudes pendientes</p>
             </div>
         </div>
         {{/each}}
         </div>
+
+
+        <div class="form-group p-3" style="text-align:center">
+            <h4 class="card-title">
+                Aprobados
+            </h4>
+         </div>
+     <div class="row">
+        {{#each nSolicitudesA}}
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                    <h3 class="card-title text-uppercase">
+                        {{Nombre_Proyecto}}
+                    </h3>
+                    <h6><b>ID Solicitud:</b></h6>
+                    <p class="m-2">{{ID_Solicitud}}</p>
+                    <h6><b>Descripcion Proyecto: </b></h6>
+                    <p class="m-2" id="desc">{{Descripcion_Proyecto}}</p>
+                    <h6><b>ID Cliente que Solicito:</b></h6>
+                    <p class="m-2">{{ID_cliente_solicita}}</p>
+                    <h6><b>Estado de la Solicitud</b></h6>
+                    <p class="m-2">Aprobado</p>
+                    <h6><b>Fecha </b></h6>
+                    <p class="m-2">{{timeago Fecha_Solicitud}}</p>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay solicitudes aprobadas</p>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+
+
+            <div class="form-group p-3" style="text-align:center">
+            <h4 class="card-title">
+                Denegados
+            </h4>
+         </div>
+     <div class="row">
+        {{#each nSolicitudesD}}
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                    <h3 class="card-title text-uppercase">
+                        {{Nombre_Proyecto}}
+                    </h3>
+                    <h6><b>ID Solicitud:</b></h6>
+                    <p class="m-2">{{ID_Solicitud}}</p>
+                    <h6><b>Descripcion Proyecto: </b></h6>
+                    <p class="m-2" id="desc">{{Descripcion_Proyecto}}</p>
+                    <h6><b>ID Cliente que Solicito:</b></h6>
+                    <p class="m-2">{{ID_cliente_solicita}}</p>
+                    <h6><b>Estado de la Solicitud</b></h6>
+                    <p class="m-2">Rechazado</p>
+                    <h6><b>Fecha </b></h6>
+                    <p class="m-2">{{timeago Fecha_Solicitud}}</p>
+                  <div class="form-group">
+                    <a href="/links/segundaS/{{ID_Solicitud}}" class="btn btn-secondary btn-block">Volver a Solicitar</a> 
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay solicitudes denegadas</p>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+
+
         <div class="form-group p-3" style="text-align:center">
             <h2 class="card-title">
                 Proyectos en desarrollo

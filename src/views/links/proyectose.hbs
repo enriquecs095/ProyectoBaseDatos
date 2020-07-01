@@ -1,0 +1,50 @@
+<div class="container p-4">
+        <div class="form-group p-3" style="text-align:center">
+            <h2 class="card-title">
+                Proyectos Asignados
+            </h2>
+         </div>       
+        <div class="row">
+        {{#each nProyectosAsi}}
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <a href="{{URL_Proy_Github}}">
+                    <h3 class="card-title text-uppercase">
+                        {{Nombre}}
+                    </h3>
+                </a>
+                <h6><b>Tecnologias Usadas:</b></h6>
+                <p class="m-2">{{Conjunto_Tecnologia}}</p>
+                <h6><b>Presupuesto:</b></h6>
+                <p class="m-2">{{Presupuesto}}</p>
+                <h6><b>Esta Asignado: </b></h6>
+                <p class="m-2">{{Esta_asignado}}</p>
+                <h6><b>Pseudo Nombre:</b></h6>
+                <p class="m-2">{{Pseudo_Nombre}}</p>
+                <h6><b>URL Proy en GitHub:</b></h6>
+                <a href="{{URL_Proy_Github}}" class="m-2">{{URL_Proy_Github}}</a>
+                <h6><b>URL Proy en Trello:</b></h6>
+                <a href="{{URL_Proy_Github}}" class="m-2">{{URL_Proy_Trello}}</a>
+                <h6><b>ID Etiqueta: </b></h6>
+                <p class="m-2">{{ID_Etiqueta}}</p>
+                <h6><b>ID Equipo Trabajo: </b></h6>
+                <p class="m-2">{{ID_Equipo_Trabajo}}</p>
+                <h6><b>ID Encargado: </b></h6>
+                <p class="m-2">{{ID_jefe_Encargado}}</p>
+                <h6><b>Fecha Inicio: </b></h6>
+                <p class="m-2">{{timeago Fecha_Inicio}}</p>
+                <h6><b>Fecha Entrega: </b></h6>
+                <p class="m-2">{{timeago Fecha_Entrega}}</p>
+                <h6><b>ID Solicitud Proyecto: </b></h6>
+                <p class="m-2">{{Id_solicitud}}</p>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>No hay proyectos asignados</p>
+            </div>
+        </div>
+        {{/each}}
+        </div>
+</div>

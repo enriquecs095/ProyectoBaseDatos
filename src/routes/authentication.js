@@ -57,13 +57,15 @@ router.post('/insertpe', async (req,res)=>{//extraigo los datos del formulario h
 });
 
 
-router.get('/Solicitudes%20Realizadas', async(req,res)=> {
+router.get('/Solicitudes%20Realizadas', async (req,res)=> {//aqui veo las solicitudes y proyectos
   const {ID_Usuario}=req.user;
-  const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
+  const  nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
   const cliente=nCliente[0]
-  const links1 = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  const nSolicitudesD = await pool.query("SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud='2' and ID_cliente_solicita=? ",[cliente.Codigo_Clientes]);
+  const nSolicitudesP = await pool.query("SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud='0' and ID_cliente_solicita=? ",[cliente.Codigo_Clientes]);
+  const nSolicitudesA = await pool.query("SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud='1' and ID_cliente_solicita=? ",[cliente.Codigo_Clientes]);
   const links = await pool.query('SELECT * FROM Proyectos p inner join Solicitud_Proyecto sp on p.Id_solicitud=sp.ID_Solicitud  WHERE sp.ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
-  res.render('links/list', {links1,links});
+  res.render('links/list', {nSolicitudesA,nSolicitudesD,nSolicitudesP,links});
 });
 
 
@@ -71,16 +73,24 @@ router.post('/Solicitudes%20Realizadas', async (req,res)=> {//aqui veo las solic
   const {ID_Usuario}=req.user;
   const nCliente=await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
   const cliente=nCliente[0]
-  const links1 = await pool.query('SELECT * FROM Solicitud_Proyecto WHERE ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
+  const nSolicitudesD = await pool.query("SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud='2' and ID_cliente_solicita=? ",[cliente.Codigo_Clientes]);
+  const nSolicitudesP = await pool.query("SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud='0' and ID_cliente_solicita=? ",[cliente.Codigo_Clientes]);
+  const nSolicitudesA = await pool.query("SELECT * FROM Solicitud_Proyecto WHERE Estado_Solicitud='1' and ID_cliente_solicita=? ",[cliente.Codigo_Clientes]);
   const links = await pool.query('SELECT * FROM Proyectos p inner join Solicitud_Proyecto sp on p.Id_solicitud=sp.ID_Solicitud  WHERE sp.ID_cliente_solicita=? ',[cliente.Codigo_Clientes]);
-  res.render('links/list', {links1,links});
+  res.render('links/list', {nSolicitudesA,nSolicitudesD,nSolicitudesP,links});
 });
 
-
+//Aqui ingreso las habilidades del nuevo empleado
 router.post('/nh', async (req,res,next)=>{//nuevamente voy a habilidades
   const lists = await pool.query('SELECT * FROM Habilidades_conocimiento');
   res.render('auth/skills',{lists});
 });
+
+router.get('/nh', async (req,res,next)=>{//nuevamente voy a habilidades
+  const lists = await pool.query('SELECT * FROM Habilidades_conocimiento');
+  res.render('auth/skills',{lists});
+});
+//-----------------------------------
 
 
 router.post('/inserth', async (req,res,next)=>{ //aqui agrego las habilidades
@@ -127,6 +137,45 @@ router.post('/Brindar%20Acceso',(req,res)=>{
 });
 
 
+//Renderizo funcionalidad
+router.get('/Funcionalidades',(req,res)=>{
+  res.render('links/completarf');
+});
+
+
+//aqui finalizo la funcionalidad
+router.post('/Funcionalidades',async (req,res)=>{
+  const {ID_Usuario}=req.user;
+  const nEmpleado=await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0];
+  const nPuesto=await pool.query('SELECT * FROM Puesto_Empleado WHERE Numero_Empleado=? ',[empleado.Numero_Empleado]);
+  const puesto=nPuesto[0];                                                                                                
+  if(puesto.Nombre_Puesto=="Jefe de Proyecto"){
+    var completado=0;
+    const nFuncionalidades = await pool.query("SELECT * FROM Funcionalidad f inner join Proyectos p on f.id_proyecto=p.ID_Proyectos  WHERE p.ID_jefe_Encargado='"+empleado.Numero_Empleado+"' AND f.Completado ='"+completado+"'");
+    res.render('links/completarf',{nFuncionalidades});
+  }else{
+    res.render('links/completarf');
+  }
+});
+
+router.get('/Funcionalidades',async (req,res)=>{
+  const {ID_Usuario}=req.user;
+  const nEmpleado=await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0];
+  const nPuesto=await pool.query('SELECT * FROM Puesto_Empleado WHERE Numero_Empleado=? ',[empleado.Numero_Empleado]);
+  const puesto=nPuesto[0];                                                                                                
+  if(puesto.Nombre_Puesto=="Jefe de Proyecto"){
+    var completado=0;
+    const nFuncionalidades = await pool.query("SELECT * FROM Funcionalidad f inner join Proyectos p on f.id_proyecto=p.ID_Proyectos  WHERE p.ID_jefe_Encargado='"+empleado.Numero_Empleado+"' AND f.Completado ='"+completado+"'");
+    res.render('links/completarf',{nFuncionalidades});
+  }else{
+    res.render('links/completarf');
+  }
+});
+//--------------------------------
+
+
 router.post('/Ver%20Usuarios',(req,res)=>{
      res.render('Ver-Usuarios');
 });
@@ -151,7 +200,7 @@ router.get('/Agregar%20Funcionalidad',async (req,res)=>{
 });
 
 
-
+//renderizo la pagina solicitar proyecto
 router.post('/Solicitar%20Proyecto',(req,res)=>{
   res.render('links/historial');
 });
@@ -160,16 +209,43 @@ router.post('/Solicitar%20Proyecto',(req,res)=>{
 router.get('/Solicitar%20Proyecto',(req,res)=>{
   res.render('links/historial');
 });
+//--------------------------------------
+
+
+//renderizo la pagina solicitar proyecto
+router.post('/Empleados%20a%20Proyectos',async (req,res)=>{
+  const nEmpleados=await pool.query('SELECT * FROM Empleados');
+  const nProyectos=await pool.query('SELECT * FROM Proyectos');
+  res.render('links/listep',{nEmpleados,nProyectos});
+});
+
+
+router.get('/Empleados%20a%20Proyectos',async (req,res)=>{
+  const nEmpleados=await pool.query('SELECT * FROM Empleados');
+  const nProyectos=await pool.query('SELECT * FROM Proyectos');
+  res.render('links/listep',{nEmpleados,nProyectos});
+});
+
+//--------------------------------------
+
 
 //renderizo la pagina agregar actividad
 router.get('/Agregar%20Actividad',async(req,res)=>{
-  const nActividades = await pool.query('SELECT * FROM Actividades');
+  const {ID_Usuario}=req.user;
+  var completado=0;
+  const nEmpleado =await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0] 
+  const nActividades = await pool.query("SELECT * FROM Actividades a inner join Funcionalidad f on a.ID_Funcionalidad= f.ID_Funcionalidad inner join Empleados_x_Proyecto  ep on ep.ID_Proyecto =f.id_proyecto WHERE f.Completado='"+completado+"' AND ep.NumeroEmpleado_x_Proyecto='"+empleado.Numero_Empleado+"'");
   res.render('links/detalles',{nActividades});
 });
 
 
 router.post('/Agregar%20Actividad',async(req,res)=>{
-  const nActividades = await pool.query('SELECT * FROM Actividades');
+  const {ID_Usuario}=req.user;
+  var completado=0;
+  const nEmpleado =await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0] 
+  const nActividades = await pool.query("SELECT * FROM Actividades a inner join Funcionalidad f on a.ID_Funcionalidad= f.ID_Funcionalidad inner join Empleados_x_Proyecto  ep on ep.ID_Proyecto =f.id_proyecto WHERE f.Completado='"+completado+"' AND ep.NumeroEmpleado_x_Proyecto='"+empleado.Numero_Empleado+"'");
   res.render('links/detalles',{nActividades});
 });
 //--------------------------------------
@@ -205,6 +281,24 @@ router.post('/Gestionar%20Solicitudes',async(req,res)=>{
 });
 //--------------------------------------
 
+//renderizo la pagina proyectose (proyectos por empleado asignado)
+router.get('/Proyectos%20Asignados',async(req,res)=>{
+  const{ID_Usuario}=req.user;
+  const nEmpleado =await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0] 
+  const nSolicitudes = await pool.query('SELECT * FROM Proyectos p inner join Empleados_x_Proyecto ep on p.ID_Proyectos =ep.ID_Proyecto WHERE ep.NumeroEmpleado_x_Proyecto=? ',[empleado.Numero_Empleado]);
+  res.render('links/proyectose',{nSolicitudes,nSolicitudesA});
+});
+
+router.post('/Proyectos%20Asignados',async(req,res)=>{
+  const{ID_Usuario}=req.user;
+  const nEmpleado =await pool.query('SELECT * FROM Empleados WHERE ID_Usuario=? ',[ID_Usuario]);
+  const empleado=nEmpleado[0] 
+  const nProyectosAsi = await pool.query('SELECT * FROM Proyectos p inner join Empleados_x_Proyecto ep on p.ID_Proyectos =ep.ID_Proyecto WHERE ep.NumeroEmpleado_x_Proyecto=? ',[empleado.Numero_Empleado]);
+  res.render('links/proyectose',{nProyectosAsi});
+});
+//--------------------------------------
+
 
 router.get('/Brindar%20Acceso',(req,res)=>{
   res.render('links/adding');
@@ -237,7 +331,7 @@ router.post('/user', async (req,res)=>{
   var rol;
   const nPrivilegios = await pool.query('SELECT * FROM Privilegios WHERE IDRol=? ',[ID_Rol]);
       if (ID_Rol==1) rol='Administrador';
-          else if (ID_Rol==2) rol='Auxiliar';
+          else if (ID_Rol==2) rol='Empleado';
           else rol='Cliente';
   if (Privilegios ==1){
       res.render('mainuser/profile',{userlog,rol,nPrivilegios});
@@ -316,9 +410,10 @@ router.post('/aceptarP', async (req,res)=>{
 router.post('/agregarF', async (req,res)=>{
   const {ID_Proy,Caracteristica,Prioridad}=req.body;
   const {ID_Usuario}=req.user;
+  var completado=0;
   const nCliente =await pool.query('SELECT * FROM Clientes WHERE ID_Usuario=? ',[ID_Usuario]);
   const cliente=nCliente[0] 
-  var seAgrego = await pool.query("INSERT INTO Funcionalidad (Orden_Prioridad,Caracteristica,id_proyecto,id_cliente) VALUES ('"+Prioridad+"','"+Caracteristica+"','"+ID_Proy+"','"+cliente.Codigo_Clientes+"')");
+  var seAgrego = await pool.query("INSERT INTO Funcionalidad (Orden_Prioridad,Caracteristica,id_proyecto,id_cliente,Completado) VALUES ('"+Prioridad+"','"+Caracteristica+"','"+ID_Proy+"','"+cliente.Codigo_Clientes+"','"+completado+"')");
   if(seAgrego){
     req.flash('success','Se agrego la funcionalidad');
       res.redirect('/Agregar%20Funcionalidad');
@@ -339,6 +434,7 @@ router.post('/agregarA', async (req,res)=>{
   }
 });
 
+
 //aqui agrego la solicitud de actividad
 router.post('/solicitarA', async (req,res)=>{
   const {Actividad, ID_Funcionalidad}=req.body;
@@ -358,6 +454,23 @@ router.post('/solicitarA', async (req,res)=>{
   }
 });
 
+//aqui finalizo la funcionalidad
+router.post('/finalizarf', async (req,res)=>{
+  const {Funcionalidad}=req.body;
+  await pool.query("UPDATE Funcionalidad SET Completado = '1' WHERE ID_Funcionalidad = '"+Funcionalidad+"'");
+    req.flash('success','Hecho');
+      res.redirect('/Funcionalidades');
+});
 
+
+//aqui agrego empleados por proyecto
+router.post('/agregarep', async (req,res)=>{
+  const {Empleado,Proyecto}=req.body;
+  var seAgrego = await pool.query("INSERT INTO Empleados_x_Proyecto (NumeroEmpleado_x_Proyecto,ID_Proyecto) VALUES ('"+Empleado+"','"+Proyecto+"')");
+  if(seAgrego){
+    req.flash('success','Se agrego el empleado al proyecto');
+      res.redirect('/Empleados%20a%20Proyectos');
+  }
+});
 
 module.exports = router;

@@ -38,6 +38,24 @@ router.get('/negar/:ID_Solicitud', async(req,res)=>{
     });
 });
 
+//aqui hago la solicitud de proyecto otra vez
+router.get('/segundaS/:ID_Solicitud', async(req,res)=>{
+    const {ID_Solicitud}= req.params;
+    date = new Date();
+    date = date.getUTCFullYear() + '-' +
+    ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+    ('00' + date.getUTCDate()).slice(-2) + ' ' + 
+    ('00' + date.getUTCHours()).slice(-2) + ':' + 
+    ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
+    ('00' + date.getUTCSeconds()).slice(-2);
+    var sql = "UPDATE Solicitud_Proyecto SET Estado_Solicitud = '0', Fecha_Solicitud= '"+date+"'  WHERE ID_Solicitud = '"+ID_Solicitud+"'";
+    await pool.query(sql, function (err, result) {
+        if (err) throw err;
+    req.flash('success','Solicitud Hecha');
+    res.redirect('/Solicitudes%20Realizadas');
+    });
+});
+
 
 //aqui apruebo la solicitud de proyecto
 router.get('/aprobar/:ID_Solicitud', async(req,res)=>{
@@ -47,19 +65,6 @@ router.get('/aprobar/:ID_Solicitud', async(req,res)=>{
         if (err) throw err;
     req.flash('success','Solicitud Aprobada');
     res.redirect('/Gestionar%20Solicitudes');
-    });
-});
-
-
-//aqui borro la solicitud de proyecto
-//   <a href="/links/cancelar/{{ID_Solicitud}}" class="btn btn-danger">Cancelar Solicitud</a>
-router.get('/cancelar/:ID_Solicitud', async(req,res)=>{//borro la solicitud proyecto
-    const {ID_Solicitud}= req.params;
-    var sql = "DELETE from Solicitud_Proyecto WHERE ID_Solicitud = '"+ID_Solicitud+"'";
-    await pool.query(sql, function (err, result) {
-        if (err) throw err;
-    req.flash('success','Solicitud eliminada');
-    res.redirect('/Solicitudes%20Realizadas');
     });
 });
 

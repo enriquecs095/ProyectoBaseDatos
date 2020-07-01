@@ -1,4 +1,13 @@
 <div class="container p-4">
+                <div class="row">
+                    <form action="/user" method="POST">
+                        <div class="card" style="text-align:left">
+                            <button class="btn btn-success btn-block">
+                                Retornar
+                            </button>
+                        </div>
+                    </form>
+                </div>
         <div class="form-group p-3" style="text-align:center">
             <h2 class="card-title">
                 Solicitudes de Proyecto
@@ -18,7 +27,7 @@
                     <h6><b>ID Cliente que Solicito:</b></h6>
                     <p class="m-2">{{ID_cliente_solicita}}</p>
                     <h6><b>Estado de la Solicitud</b></h6>
-                    <p class="m-2">{{Estado_Solicitud}}</p>
+                    <p class="m-2">Pendiente</p>
                     <h6><b>Fecha </b></h6>
                     <p class="m-2">{{timeago Fecha_Solicitud}}</p>
                 <div class="form-group">
@@ -55,6 +64,7 @@
                     <p class="m-2" id="desc">{{ID_Solicitud}}</p>
                     <h6><b>ID Funcionalidad: </b></h6>
                     <p class="m-2" id="desc">{{ID_Funcionalidad}}</p>
+                    <p class="m-2" id="desc">Pendiente</p>
                     <p class="m-2">{{timeago Fecha_Solicitud}}</p>
                 <div class="form-group">
                     <a href="/links/aprobarSA/{{ID_Solicitud}}" class="btn btn-secondary btn-block">Aceptar Solicitud</a> 

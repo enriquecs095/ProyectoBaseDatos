@@ -9,7 +9,7 @@
                     <form action="/solicitarA" method="POST">
                      <div class="form-group">
                         <h6>Seleccione Funcionalidad:</h6>
-                        <select id="ID_Funcionalidad" name="ID_Funcionalidad" >
+                        <select id="ID_Funcionalidad" name="ID_Funcionalidad" aria-placeholder="Funcionalidad" >
                                 {{#each nFuncionalidades}}
                                     <option value="{{ID_Funcionalidad}}">{{ID_Funcionalidad}} - {{Caracteristica}}</option>
                                 {{/each}}
@@ -25,6 +25,8 @@
                         </div>
                     </form>
                 </div>
+        
+                    
             </div>
         </div>
     </div>
